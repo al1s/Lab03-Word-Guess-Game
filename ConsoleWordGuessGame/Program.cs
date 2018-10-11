@@ -16,14 +16,31 @@ namespace ConsoleWordGuessGame
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Can't write to file");
-                Console.WriteLine(ex.Message);
+                ExceptionMessageToConsole("Can't write to file", ex);
             }
             finally
             {
                 if (sw != null) sw.Close();
             }
             return retCode;
+        }
+        public static string[] ReadFrom(string path)
+        {
+            string[] result = default(string[]);
+            try
+            {
+                result = File.ReadAllLines(path);
+            }
+            catch (Exception ex)
+            {
+                ExceptionMessageToConsole("Can't read file", ex);
+            }
+            return result;
+        }
+        public static void ExceptionMessageToConsole(string message, Exception ex)
+        {
+            Console.WriteLine(message);
+            Console.WriteLine(ex.Message);
         }
         static void Main(string[] args)
         {
