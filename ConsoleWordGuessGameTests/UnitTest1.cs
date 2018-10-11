@@ -10,22 +10,35 @@ namespace ConsoleWordGuessGameTests
         [Fact]
         public void CanCreateFile()
         {
-            Program.CreateAppendTo("data.txt", "");
-            Assert.True(File.Exists("data.txt"));
+            string path = "data.txt";
+            if (File.Exists(path)) File.Delete(path);
+            Program.CreateAppendTo(path, "");
+            Assert.True(File.Exists(path));
+            if (File.Exists(path)) File.Delete(path);
         }
         [Fact]
         public void CanReadFromFile()
         {
             string path = "data.txt";
+            if (File.Exists(path)) File.Delete(path);
             string testString = "check we can read a string from file";
             Program.CreateAppendTo(path, testString);
             string[] dataContent = Program.ReadFrom(path);
             Assert.Contains(testString, dataContent);
+            if (File.Exists(path)) File.Delete(path);
         }
         [Fact]
         public void CanDeleteFromFile()
         {
-            
+            string path = "anotherData.txt";
+            if (File.Exists(path)) File.Delete(path);
+            string[] wordsInFile = "check we can read a string from file".Split(" ");
+            int wordNumberToDelete = 3;
+            Array.ForEach(wordsInFile, elm => Program.CreateAppendTo(path, elm));
+            Program.DeleteFrom(path, 3);
+            string[] dataContent = Program.ReadFrom(path);
+            Assert.DoesNotContain(wordsInFile[wordNumberToDelete], dataContent);
+            if (File.Exists(path)) File.Delete(path);
         }
     }
 }
