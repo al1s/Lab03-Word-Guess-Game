@@ -9,6 +9,12 @@ namespace ConsoleWordGuessGame
         {
             Console.WriteLine("Hello World!");
         }
+        /// <summary>
+        /// Creates new file and/or append given string to it.
+        /// </summary>
+        /// <param name="path">Path to file</param>
+        /// <param name="content">String to add to file</param>
+        /// <returns>return code (0 - Ok, 1 - Error)</returns>
         public static int CreateAppendTo(string path, string content)
         {
             int retCode = 1;
@@ -29,6 +35,11 @@ namespace ConsoleWordGuessGame
             }
             return retCode;
         }
+        /// <summary>
+        /// Read all strings from file
+        /// </summary>
+        /// <param name="path">Path to file</param>
+        /// <returns>Array of strings in the file</returns>
         public static string[] ReadFrom(string path)
         {
             string[] result = default(string[]);
@@ -43,6 +54,12 @@ namespace ConsoleWordGuessGame
             }
             return result;
         }
+        /// <summary>
+        /// Delete file from path
+        /// </summary>
+        /// <param name="path">Path to file</param>
+        /// <param name="lineNumber">Number of string to delete</param>
+        /// <returns>return code (0 - Ok, 1 - Error)</returns>
         public static int DeleteFrom(string path, int lineNumber)
         {
             int result = default(int);
@@ -63,6 +80,11 @@ namespace ConsoleWordGuessGame
             }
             return result;
         }
+        /// <summary>
+        /// Print custom error message and internal error message to console
+        /// </summary>
+        /// <param name="message">Custom error message</param>
+        /// <param name="ex">Original exception type</param>
         public static void ExceptionMessageToConsole(string message, Exception ex)
         {
             Console.WriteLine(message);
