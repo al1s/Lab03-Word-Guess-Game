@@ -40,5 +40,12 @@ namespace ConsoleWordGuessGameTests
             Assert.DoesNotContain(wordsInFile[wordNumberToDelete], dataContent);
             if (File.Exists(path)) File.Delete(path);
         }
+        [Theory]
+        [InlineData("WARNING", "_ _ _ _ _ _ _")]
+        [InlineData("ERROR", "_ _ _ _ _")]
+        public void ReturnUnderscoreForWord(string word, string expectedValue)
+        {
+            Assert.Equal(expectedValue, Program.MaskWord(word));
+        }
     }
 }

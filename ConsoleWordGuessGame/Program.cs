@@ -9,6 +9,8 @@ namespace ConsoleWordGuessGame
         {
             Console.WriteLine("Hello World!");
         }
+
+        // ================= IO OPERATIONS ====================
         /// <summary>
         /// Creates new file and/or append given string to it.
         /// </summary>
@@ -89,6 +91,23 @@ namespace ConsoleWordGuessGame
         {
             Console.WriteLine(message);
             Console.WriteLine(ex.Message);
+        }
+
+
+        // ================= GAME ENGINE ====================
+        /// <summary>
+        /// Convert any word into masked string of underscores separated by spaces
+        /// </summary>
+        /// <param name="word">Word to mask</param>
+        /// <returns>Masked string</returns>
+        public static string MaskWord(string word)
+        {
+            char[] arr = word.ToCharArray(); 
+            for (int i = 0; i < arr.Length; i++)
+            {
+                arr[i] = '_';
+            }
+            return string.Join(' ', arr);
         }
     }
 }
