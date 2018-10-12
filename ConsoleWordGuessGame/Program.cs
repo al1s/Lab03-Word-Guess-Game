@@ -116,6 +116,11 @@ namespace ConsoleWordGuessGame
             maskedWord = string.Join(' ', arr);
             return withUnderscores;
         }
+        public static string GetRandomWordFrom(string[] words)
+        {
+            Random random = new Random();
+            return words[random.Next(0, words.Length)];
+        }
 
         // ================= UI ====================
         public static void DisplayInitialScreen()
@@ -126,26 +131,108 @@ namespace ConsoleWordGuessGame
             Console.WriteLine("1. Play");
             Console.WriteLine("2. Admin");
             Console.WriteLine("3. Exit");
-            HandleInput(GetInput(), "initial");
+            HandleInput(GetInput("numeric"), "initial");
         }
 
         public static void DisplayAdminScreen()
         {
             Console.Clear();
-            Console.WriteLine("1. Play");
-            Console.WriteLine("2. Admin");
-            Console.WriteLine("3. Main Menu");
-            HandleInput(GetInput(), "admin");
+            Console.WriteLine("1. Show All Words");
+            Console.WriteLine("2. Add New Word");
+            Console.WriteLine("3. Delete Word");
+            Console.WriteLine("4. Main Menu");
+            HandleInput(GetInput("numeric"), "admin");
         }
 
         public static void DisplayAddWordScreen()
         {
             Console.Clear();
-            Console.WriteLine("Add New Word");
-            HandleInput(GetInput(), screenType);
+            Console.WriteLine("Add New Word (Press Enter to save, Ctrl-X to get back to Main Menu):");
+            HandleInput(GetInput("alphabetic"), "addWord");
+        }
+        public static void DisplayDeleteWordScreen()
+        {
+            Console.Clear();
+            Console.WriteLine("Choose # of Word to delete (Press Enter to save, Ctrl-X to get back to Main Menu):");
+            HandleInput(GetInput("alphabetic"), "deleteWord");
+        }
+        public static void DisplayGamePlayScreen(string wordToShow, string alreadyUsedSymbols)
+        {
+            Console.Clear();
+            Console.WriteLine("Choose a letter");
+            Console.WriteLine();
+            Console.WriteLine(wordToShow);
+            Console.WriteLine(alreadyUsedSymbols);
+            HandleInput(GetInput("alphabetic"), "gamePlay");
+        }
+        public static void DisplayShowAllWordsScreen()
+        {
+            Console.Clear();
+            Console.WriteLine("All Available Words");
+            Console.ReadLine();
             DisplayInitialScreen();
         }
-        public static void HandleInput(string userInput, string screen) { }
-        public static string GetInput() { return string.Empty; }
+
+        public static void HandleInput(string userInput, string screen)
+        {
+
+        }
+
+        public static void HandlePlay() { }
+
+        public static string GetInput(string expectedInputType)
+        {
+            // storage for input result 
+            string userInput = string.Empty;
+            ConsoleKeyInfo pressed;
+            // while not pressed Enter
+            do
+            {
+                // don't show key char on the screen
+                pressed = Console.ReadKey(true);
+                // check whether the key pressed  is a number or not
+                if (pressed.Key != ConsoleKey.Backspace && expectedInputType == "numeric")
+                {
+                    int value = default(int);
+                    if (int.TryParse(pressed.KeyChar.ToString(), out value))
+                    {
+                        userInput += pressed.KeyChar;
+                        Console.Write(pressed.KeyChar);
+                    }
+                    if (pressed.Key == ConsoleKey.X)
+                    {
+                        userInput = "ctrlx";
+                        break;
+                    }
+                }
+                // check whether the key pressed is an alphabetic char or not
+                else if (pressed.Key != ConsoleKey.Backspace && expectedInputType == "alphabetic")
+                {
+                    char value = default(char);
+                    if (char.TryParse(pressed.KeyChar.ToString(), out value))
+                    {
+                        userInput += pressed.KeyChar;
+                        Console.Write(pressed.KeyChar);
+                    }
+                    if (pressed.Key == ConsoleKey.X)
+                    {
+                        userInput = "ctrlx";
+                        break;
+                    }
+                }
+                else
+                {
+                    // the user want do delete the last char
+                    if (pressed.Key == ConsoleKey.Backspace && userInput.Length != 0)
+                    {
+                        // sync storage and screen 
+                        userInput = userInput.Substring(0, userInput.Length - 1);
+                        Console.Write("\b \b");
+                    }
+                }
+            } while (pressed.Key != ConsoleKey.Enter);
+            return userInput;
+        }
+
     }
 }

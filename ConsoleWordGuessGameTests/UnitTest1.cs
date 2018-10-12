@@ -42,11 +42,11 @@ namespace ConsoleWordGuessGameTests
         }
         [Theory]
         [InlineData("WARNING", "ASWD", true, "W A _ _ _ _ _")]
-        [InlineData("ERROR", "ASWDR" , true, "_ R R _ R")]
+        [InlineData("ERROR", "ASWDR", true, "_ R R _ R")]
         [InlineData("WARNING", "", true, "_ _ _ _ _ _ _")]
-        [InlineData("ERROR", "" , true, "_ _ _ _ _")]
+        [InlineData("ERROR", "", true, "_ _ _ _ _")]
         [InlineData("WARNING", "ARGINSWD", false, "W A R N I N G")]
-        [InlineData("ERROR", "EOASWDR" , false, "E R R O R")]
+        [InlineData("ERROR", "EOASWDR", false, "E R R O R")]
         public void ReturnMaskedWordWithMatchedLetters(string word, string collectedUserInput, bool withUnderscores, string expectedValue)
         {
             string returnedValue = string.Empty;
@@ -55,15 +55,23 @@ namespace ConsoleWordGuessGameTests
         }
         [Theory]
         [InlineData("WARNING", "ASWD", true, "W A _ _ _ _ _")]
-        [InlineData("ERROR", "ASWDR" , true, "_ R R _ R")]
+        [InlineData("ERROR", "ASWDR", true, "_ R R _ R")]
         [InlineData("WARNING", "", true, "_ _ _ _ _ _ _")]
-        [InlineData("ERROR", "" , true, "_ _ _ _ _")]
+        [InlineData("ERROR", "", true, "_ _ _ _ _")]
         [InlineData("WARNING", "ARGINSWD", false, "W A R N I N G")]
-        [InlineData("ERROR", "EOASWDR" , false, "E R R O R")]
+        [InlineData("ERROR", "EOASWDR", false, "E R R O R")]
         public void ReturnCorrectBoolIfWithUnderscores(string word, string collectedUserInput, bool withUnderscores, string expectedValue)
         {
             string returnedValue = string.Empty;
             Assert.Equal(withUnderscores, Program.LeftToMaskWithFilter(word, collectedUserInput, out returnedValue));
         }
+        //[Fact]
+        //public void ReturnRandomWord()
+        //{
+        //    int seed = 4;
+        //    string[] words = new string[] { "WARNING", "ERROR", "SOLUTION", "STRUCT" };
+        //    Random rnd = new Random(seed);
+        //    Assert.Equal(words[rnd.Next(0, words.Length)], Program.GetRandomWordFrom(words, seed));
+        //}
     }
 }
