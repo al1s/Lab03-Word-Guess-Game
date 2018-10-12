@@ -96,33 +96,25 @@ namespace ConsoleWordGuessGame
 
         // ================= GAME ENGINE ====================
         /// <summary>
-        /// Convert any word into masked string of underscores separated by spaces
-        /// </summary>
-        /// <param name="word">Word to mask</param>
-        /// <returns>Masked string</returns>
-        public static string MaskWord(string word)
-        {
-            char[] arr = word.ToCharArray(); 
-            for (int i = 0; i < arr.Length; i++)
-            {
-                arr[i] = '_';
-            }
-            return string.Join(' ', arr);
-        }
-        /// <summary>
-        /// Mask with underscores letters which are not in the word
+        /// Mask with underscores the letters which are not in the word
         /// </summary>
         /// <param name="word">Word to mask</param>
         /// <param name="keepUnmasked">Words to keep unmasked</param>
         /// <returns></returns>
-        public static string UnmaskByUserInput(string word, string keepUnmasked)
+        public static bool LeftToMaskWithFilter(string word, string keepUnmasked, out string maskedWord)
         {
+            bool withUnderscores = false;
             char[] arr = word.ToCharArray(); 
             for (int i = 0; i < arr.Length; i++)
             {
-                arr[i] = keepUnmasked.Contains(arr[i]) ? arr[i] : '_';
+                if (!keepUnmasked.Contains(arr[i]))
+                {
+                    arr[i] =  '_';
+                    withUnderscores = true;
+                }
             }
-            return string.Join(' ', arr);
+            maskedWord = string.Join(' ', arr);
+            return withUnderscores;
         }
     }
 }

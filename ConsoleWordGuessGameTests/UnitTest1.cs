@@ -41,20 +41,29 @@ namespace ConsoleWordGuessGameTests
             if (File.Exists(path)) File.Delete(path);
         }
         [Theory]
-        [InlineData("WARNING", "_ _ _ _ _ _ _")]
-        [InlineData("ERROR", "_ _ _ _ _")]
-        public void ReturnUnderscoreForWord(string word, string expectedValue)
+        [InlineData("WARNING", "ASWD", true, "W A _ _ _ _ _")]
+        [InlineData("ERROR", "ASWDR" , true, "_ R R _ R")]
+        [InlineData("WARNING", "", true, "_ _ _ _ _ _ _")]
+        [InlineData("ERROR", "" , true, "_ _ _ _ _")]
+        [InlineData("WARNING", "ARGINSWD", false, "W A R N I N G")]
+        [InlineData("ERROR", "EOASWDR" , false, "E R R O R")]
+        public void ReturnMaskedWordWithMatchedLetters(string word, string collectedUserInput, bool withUnderscores, string expectedValue)
         {
-            Assert.Equal(expectedValue, Program.MaskWord(word));
+            string returnedValue = string.Empty;
+            Program.LeftToMaskWithFilter(word, collectedUserInput, out returnedValue);
+            Assert.Equal(expectedValue, returnedValue);
         }
         [Theory]
-        [InlineData("WARNING", "ASWD", "W A _ _ _ _ _")]
-        [InlineData("ERROR", "ASWDR" ,"_ R R _ R")]
-        [InlineData("WARNING", "", "_ _ _ _ _ _ _")]
-        [InlineData("ERROR", "" ,"_ _ _ _ _")]
-        public void ReturnMaskedWordWithMatchedLetters(string word, string collectedUserInput, string expectedValue)
+        [InlineData("WARNING", "ASWD", true, "W A _ _ _ _ _")]
+        [InlineData("ERROR", "ASWDR" , true, "_ R R _ R")]
+        [InlineData("WARNING", "", true, "_ _ _ _ _ _ _")]
+        [InlineData("ERROR", "" , true, "_ _ _ _ _")]
+        [InlineData("WARNING", "ARGINSWD", false, "W A R N I N G")]
+        [InlineData("ERROR", "EOASWDR" , false, "E R R O R")]
+        public void ReturnCorrectBoolIfWithUnderscores(string word, string collectedUserInput, bool withUnderscores, string expectedValue)
         {
-            Assert.Equal(expectedValue, Program.UnmaskByUserInput(word, collectedUserInput));
+            string returnedValue = string.Empty;
+            Assert.Equal(withUnderscores, Program.LeftToMaskWithFilter(word, collectedUserInput, out returnedValue));
         }
     }
 }
