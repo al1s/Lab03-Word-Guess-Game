@@ -50,7 +50,7 @@ namespace ConsoleWordGuessGameTests
         public void ReturnMaskedWordWithMatchedLetters(string word, string collectedUserInput, bool withUnderscores, string expectedValue)
         {
             string returnedValue = string.Empty;
-            Program.LeftToMaskWithFilter(word, collectedUserInput, out returnedValue);
+            Program.MaskWithFilter(word, collectedUserInput, out returnedValue);
             Assert.Equal(expectedValue, returnedValue);
         }
         [Theory]
@@ -63,7 +63,7 @@ namespace ConsoleWordGuessGameTests
         public void ReturnCorrectBoolIfWithUnderscores(string word, string collectedUserInput, bool withUnderscores, string expectedValue)
         {
             string returnedValue = string.Empty;
-            Assert.Equal(withUnderscores, Program.LeftToMaskWithFilter(word, collectedUserInput, out returnedValue));
+            Assert.Equal(withUnderscores, Program.MaskWithFilter(word, collectedUserInput, out returnedValue));
         }
         //[Fact]
         //public void ReturnRandomWord()

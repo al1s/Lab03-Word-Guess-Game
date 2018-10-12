@@ -7,9 +7,44 @@ namespace ConsoleWordGuessGame
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            string[] data = default(string[]);
+            string path = "data.txt";
+            while (true) { 
+                if (File.Exists(path))
+                {
+                    data = ReadFrom(path);
+                    DisplayInitialScreen();
+                    switch (GetInput("numeric"))
+                    {
+                        case "1":
+                            HandlePlay();
+                            break;
+                        case "2":
+                            DisplayAdminScreen();
+                            switch (GetInput("numeric"))
+                            {
+                                case "1":
+                                    DisplayShowAllWordsScreen();
+                                    break;
+                                case "2":
+                                    DisplayAddWordScreen(path);
+                                    break;
+                                case "3":
+                                    DisplayDeleteWordScreen(path);
+                                break;
+                            };
+                            break;
+                        case "3":
+                            Environment.Exit(0);
+                            break;
+                    };
+                }
+                else
+                {
+                    DisplayAddWordScreen(path);
+                }
+            }
         }
-
         // ================= IO OPERATIONS ====================
         /// <summary>
         /// Creates new file and/or append given string to it.
@@ -101,7 +136,7 @@ namespace ConsoleWordGuessGame
         /// <param name="word">Word to mask</param>
         /// <param name="keepUnmasked">Words to keep unmasked</param>
         /// <returns></returns>
-        public static bool LeftToMaskWithFilter(string word, string keepUnmasked, out string maskedWord)
+        public static bool MaskWithFilter(string word, string keepUnmasked, out string maskedWord)
         {
             bool withUnderscores = false;
             char[] arr = word.ToCharArray(); 
@@ -131,7 +166,6 @@ namespace ConsoleWordGuessGame
             Console.WriteLine("1. Play");
             Console.WriteLine("2. Admin");
             Console.WriteLine("3. Exit");
-            HandleInput(GetInput("numeric"), "initial");
         }
 
         public static void DisplayAdminScreen()
@@ -141,44 +175,65 @@ namespace ConsoleWordGuessGame
             Console.WriteLine("2. Add New Word");
             Console.WriteLine("3. Delete Word");
             Console.WriteLine("4. Main Menu");
-            HandleInput(GetInput("numeric"), "admin");
         }
 
-        public static void DisplayAddWordScreen()
+        public static void DisplayAddWordScreen(string path)
         {
             Console.Clear();
             Console.WriteLine("Add New Word (Press Enter to save, Ctrl-X to get back to Main Menu):");
-            HandleInput(GetInput("alphabetic"), "addWord");
+            ManagedWords(GetInput("alphabetic"), "addWord", path);
         }
-        public static void DisplayDeleteWordScreen()
+        public static void DisplayDeleteWordScreen(string path)
         {
             Console.Clear();
             Console.WriteLine("Choose # of Word to delete (Press Enter to save, Ctrl-X to get back to Main Menu):");
-            HandleInput(GetInput("alphabetic"), "deleteWord");
+            ManagedWords(GetInput("alphabetic"), "deleteWord", path);
+        }
+        public static void ManagedWords(string userInput, string screen, string path)
+        {
+            if (userInput == "ctrlx") return;
+            switch(screen)
+            {
+                case "addWord":
+                    HandleAddWord(path, userInput);
+                    break;
+                case "deleteWord":
+                    HandleDeleteWord(path, userInput);
+                    break;
+            }
         }
         public static void DisplayGamePlayScreen(string wordToShow, string alreadyUsedSymbols)
         {
-            Console.Clear();
-            Console.WriteLine("Choose a letter");
-            Console.WriteLine();
-            Console.WriteLine(wordToShow);
-            Console.WriteLine(alreadyUsedSymbols);
-            HandleInput(GetInput("alphabetic"), "gamePlay");
         }
         public static void DisplayShowAllWordsScreen()
         {
             Console.Clear();
             Console.WriteLine("All Available Words");
             Console.ReadLine();
-            DisplayInitialScreen();
         }
 
-        public static void HandleInput(string userInput, string screen)
+        public static void HandleAddWord(string path, string wordToSave)
         {
-
+            try
+            {
+                CreateAppendTo(path, wordToSave);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
-
-        public static void HandlePlay() { }
+        public static void HandleDeleteWord(string path, string wordPositionToDelete)
+        {
+            try
+            {
+                DeleteFrom(path, int.Parse(wordPositionToDelete));
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
         public static string GetInput(string expectedInputType)
         {
@@ -199,7 +254,7 @@ namespace ConsoleWordGuessGame
                         userInput += pressed.KeyChar;
                         Console.Write(pressed.KeyChar);
                     }
-                    if (pressed.Key == ConsoleKey.X)
+                    if ((pressed.Modifiers & ConsoleModifiers.Control) != 0 && pressed.Key == ConsoleKey.X)
                     {
                         userInput = "ctrlx";
                         break;
@@ -214,7 +269,7 @@ namespace ConsoleWordGuessGame
                         userInput += pressed.KeyChar;
                         Console.Write(pressed.KeyChar);
                     }
-                    if (pressed.Key == ConsoleKey.X)
+                    if ((pressed.Modifiers & ConsoleModifiers.Control) != 0 && pressed.Key == ConsoleKey.X)
                     {
                         userInput = "ctrlx";
                         break;
