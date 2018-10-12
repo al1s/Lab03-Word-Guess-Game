@@ -109,5 +109,20 @@ namespace ConsoleWordGuessGame
             }
             return string.Join(' ', arr);
         }
+        /// <summary>
+        /// Mask with underscores letters which are not in the word
+        /// </summary>
+        /// <param name="word">Word to mask</param>
+        /// <param name="keepUnmasked">Words to keep unmasked</param>
+        /// <returns></returns>
+        public static string UnmaskByUserInput(string word, string keepUnmasked)
+        {
+            char[] arr = word.ToCharArray(); 
+            for (int i = 0; i < arr.Length; i++)
+            {
+                arr[i] = keepUnmasked.Contains(arr[i]) ? arr[i] : '_';
+            }
+            return string.Join(' ', arr);
+        }
     }
 }

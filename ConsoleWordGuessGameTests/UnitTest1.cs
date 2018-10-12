@@ -47,5 +47,14 @@ namespace ConsoleWordGuessGameTests
         {
             Assert.Equal(expectedValue, Program.MaskWord(word));
         }
+        [Theory]
+        [InlineData("WARNING", "ASWD", "W A _ _ _ _ _")]
+        [InlineData("ERROR", "ASWDR" ,"_ R R _ R")]
+        [InlineData("WARNING", "", "_ _ _ _ _ _ _")]
+        [InlineData("ERROR", "" ,"_ _ _ _ _")]
+        public void ReturnMaskedWordWithMatchedLetters(string word, string collectedUserInput, string expectedValue)
+        {
+            Assert.Equal(expectedValue, Program.UnmaskByUserInput(word, collectedUserInput));
+        }
     }
 }
