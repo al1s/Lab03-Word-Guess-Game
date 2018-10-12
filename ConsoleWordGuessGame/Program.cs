@@ -94,7 +94,7 @@ namespace ConsoleWordGuessGame
         }
 
 
-        // ================= GAME ENGINE ====================
+        // ================= APP ====================
         /// <summary>
         /// Mask with underscores the letters which are not in the word
         /// </summary>
@@ -116,5 +116,36 @@ namespace ConsoleWordGuessGame
             maskedWord = string.Join(' ', arr);
             return withUnderscores;
         }
+
+        // ================= UI ====================
+        public static void DisplayInitialScreen()
+        {
+            Console.Clear();
+            Console.WriteLine("Word Guess Game");
+            Console.WriteLine("Choose operation");
+            Console.WriteLine("1. Play");
+            Console.WriteLine("2. Admin");
+            Console.WriteLine("3. Exit");
+            HandleInput(GetInput(), "initial");
+        }
+
+        public static void DisplayAdminScreen()
+        {
+            Console.Clear();
+            Console.WriteLine("1. Play");
+            Console.WriteLine("2. Admin");
+            Console.WriteLine("3. Main Menu");
+            HandleInput(GetInput(), "admin");
+        }
+
+        public static void DisplayAddWordScreen()
+        {
+            Console.Clear();
+            Console.WriteLine("Add New Word");
+            HandleInput(GetInput(), screenType);
+            DisplayInitialScreen();
+        }
+        public static void HandleInput(string userInput, string screen) { }
+        public static string GetInput() { return string.Empty; }
     }
 }
