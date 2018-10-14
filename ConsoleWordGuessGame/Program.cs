@@ -9,7 +9,7 @@ namespace ConsoleWordGuessGame
         {
             string[] data = default(string[]);
             string path = "data.txt";
-            while (true) { 
+            while (true) {
                 if (File.Exists(path))
                 {
                     data = ReadFrom(path);
@@ -17,21 +17,21 @@ namespace ConsoleWordGuessGame
                     switch (GetInput("numeric"))
                     {
                         case "1":
-                            HandlePlay();
+                            HandlePlay(data);
                             break;
                         case "2":
                             DisplayAdminScreen();
                             switch (GetInput("numeric"))
                             {
                                 case "1":
-                                    DisplayShowAllWordsScreen();
+                                    DisplayShowAllWordsScreen(data);
                                     break;
                                 case "2":
                                     DisplayAddWordScreen(path);
                                     break;
                                 case "3":
-                                    DisplayDeleteWordScreen(path);
-                                break;
+                                    DisplayDeleteWordScreen(data, path);
+                                    break;
                             };
                             break;
                         case "3":
@@ -118,6 +118,26 @@ namespace ConsoleWordGuessGame
             return result;
         }
         /// <summary>
+        /// Handle addition/deletion of word in a file
+        /// </summary>
+        /// <param name="dataToHandle">Data we want be added/deleted from file</param>
+        /// <param name="action">Action we want to undertake</param>
+        /// <param name="path">Path to file</param>
+        public static void ManageFileContent(string dataToHandle, string action, string path)
+        {
+            if (dataToHandle== "ctrlx") return;
+            switch (action)
+            {
+                case "addWord":
+                    CreateAppendTo(path, dataToHandle);
+                    break;
+                case "deleteWord":
+                    // empty input destroys it
+                    DeleteFrom(path, int.Parse(dataToHandle));
+                    break;
+            }
+        }
+        /// <summary>
         /// Print custom error message and internal error message to console
         /// </summary>
         /// <param name="message">Custom error message</param>
@@ -139,12 +159,12 @@ namespace ConsoleWordGuessGame
         public static bool MaskWithFilter(string word, string keepUnmasked, out string maskedWord)
         {
             bool withUnderscores = false;
-            char[] arr = word.ToCharArray(); 
+            char[] arr = word.ToCharArray();
             for (int i = 0; i < arr.Length; i++)
             {
                 if (!keepUnmasked.Contains(arr[i]))
                 {
-                    arr[i] =  '_';
+                    arr[i] = '_';
                     withUnderscores = true;
                 }
             }
@@ -155,6 +175,16 @@ namespace ConsoleWordGuessGame
         {
             Random random = new Random();
             return words[random.Next(0, words.Length)];
+        }
+        public static void HandlePlay(string[] words)
+        {
+            string word = GetRandomWordFrom(words);
+            string maskedWord = string.Empty;
+            string userInput = string.Empty;
+            if(MaskWithFilter(word, userInput.ToUpper(), out maskedWord))
+            { 
+                DisplayGamePlayScreen(word, userInput);
+            }
         }
 
         // ================= UI ====================
@@ -167,7 +197,6 @@ namespace ConsoleWordGuessGame
             Console.WriteLine("2. Admin");
             Console.WriteLine("3. Exit");
         }
-
         public static void DisplayAdminScreen()
         {
             Console.Clear();
@@ -176,65 +205,46 @@ namespace ConsoleWordGuessGame
             Console.WriteLine("3. Delete Word");
             Console.WriteLine("4. Main Menu");
         }
-
         public static void DisplayAddWordScreen(string path)
         {
             Console.Clear();
             Console.WriteLine("Add New Word (Press Enter to save, Ctrl-X to get back to Main Menu):");
-            ManagedWords(GetInput("alphabetic"), "addWord", path);
+            ManageFileContent(GetInput("alphabetic").ToUpper(), "addWord", path);
+            Console.WriteLine("Word was added");
+            Console.ReadLine();
         }
-        public static void DisplayDeleteWordScreen(string path)
+        public static void DisplayDeleteWordScreen(string[] words, string path)
         {
             Console.Clear();
             Console.WriteLine("Choose # of Word to delete (Press Enter to save, Ctrl-X to get back to Main Menu):");
-            ManagedWords(GetInput("alphabetic"), "deleteWord", path);
-        }
-        public static void ManagedWords(string userInput, string screen, string path)
-        {
-            if (userInput == "ctrlx") return;
-            switch(screen)
+            for (int i = 0; i < words.Length; i++)
             {
-                case "addWord":
-                    HandleAddWord(path, userInput);
-                    break;
-                case "deleteWord":
-                    HandleDeleteWord(path, userInput);
-                    break;
+                Console.WriteLine($"{i + 1}. {words[i]}");
             }
+            ManageFileContent(GetInput("alphabetic"), "deleteWord", path);
+            Console.WriteLine("Word was deleted");
+            Console.ReadLine();
+
         }
-        public static void DisplayGamePlayScreen(string wordToShow, string alreadyUsedSymbols)
-        {
-        }
-        public static void DisplayShowAllWordsScreen()
+        public static void DisplayShowAllWordsScreen(string[] words)
         {
             Console.Clear();
             Console.WriteLine("All Available Words");
+            foreach (string word in words)
+            {
+                Console.WriteLine(word);
+            }
             Console.ReadLine();
         }
-
-        public static void HandleAddWord(string path, string wordToSave)
+        public static string DisplayGamePlayScreen(string wordToShow, string alreadyUsedSymbols)
         {
-            try
-            {
-                CreateAppendTo(path, wordToSave);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            Console.Clear();
+            Console.WriteLine("Choose a letter");
+            Console.WriteLine();
+            Console.WriteLine(wordToShow);
+            Console.WriteLine(alreadyUsedSymbols);
+            return GetInput("alphabetic");
         }
-        public static void HandleDeleteWord(string path, string wordPositionToDelete)
-        {
-            try
-            {
-                DeleteFrom(path, int.Parse(wordPositionToDelete));
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
         public static string GetInput(string expectedInputType)
         {
             // storage for input result 
