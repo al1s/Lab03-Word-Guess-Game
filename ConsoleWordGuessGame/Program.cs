@@ -27,6 +27,7 @@ namespace ConsoleWordGuessGame
                                     DisplayShowAllWordsScreen(data);
                                     break;
                                 case "2":
+                                    Console.Clear();
                                     DisplayAddWordScreen(path);
                                     break;
                                 case "3":
@@ -41,6 +42,7 @@ namespace ConsoleWordGuessGame
                 }
                 else
                 {
+                    Console.Write("There is no words to choose from. ");
                     DisplayAddWordScreen(path);
                 }
             }
@@ -155,8 +157,26 @@ namespace ConsoleWordGuessGame
         /// </summary>
         /// <param name="word">Word to mask</param>
         /// <param name="keepUnmasked">Words to keep unmasked</param>
-        /// <returns></returns>
-        public static bool MaskWithFilter(string word, string keepUnmasked, out string maskedWord)
+        /// <returns>The word masked with underscores</returns>
+        public static string MaskWithFilter(string word, string keepUnmasked)
+        {
+            char[] arr = word.ToCharArray();
+            for (int i = 0; i < arr.Length; i++)
+            {
+                if (!keepUnmasked.Contains(arr[i]))
+                {
+                    arr[i] = '_';
+                }
+            }
+            return string.Join(' ', arr);
+        }
+        /// <summary>
+        /// Check if underscores are in the word
+        /// </summary>
+        /// <param name="word">Word to mask</param>
+        /// <param name="keepUnmasked">Words to keep unmasked</param>
+        /// <returns>True - the word has underscores, false - doesn't</returns>
+        public  static bool WithUnderscores(string word, string keepUnmasked)
         {
             bool withUnderscores = false;
             char[] arr = word.ToCharArray();
@@ -164,30 +184,48 @@ namespace ConsoleWordGuessGame
             {
                 if (!keepUnmasked.Contains(arr[i]))
                 {
-                    arr[i] = '_';
                     withUnderscores = true;
                 }
             }
-            maskedWord = string.Join(' ', arr);
             return withUnderscores;
         }
+        /// <summary>
+        /// Given an array of strings choose random
+        /// </summary>
+        /// <param name="words">Array of strings</param>
+        /// <returns>One random word</returns>
         public static string GetRandomWordFrom(string[] words)
         {
             Random random = new Random();
             return words[random.Next(0, words.Length)];
         }
+        /// <summary>
+        /// Helper to manage game flow
+        /// </summary>
+        /// <param name="words">Array of strings for the game</param>
         public static void HandlePlay(string[] words)
         {
             string word = GetRandomWordFrom(words);
             string maskedWord = string.Empty;
             string userInput = string.Empty;
-            if(MaskWithFilter(word, userInput.ToUpper(), out maskedWord))
-            { 
-                DisplayGamePlayScreen(word, userInput);
+            string userInputCollector = string.Empty;
+
+            while(WithUnderscores(word, userInputCollector.ToUpper()))
+            {
+                maskedWord = MaskWithFilter(word, userInputCollector.ToUpper());
+                userInput = DisplayGamePlayScreen(maskedWord, userInputCollector);
+                if (userInput== "ctrlx") return;
+                userInputCollector += userInput; 
             }
+            Console.WriteLine($"Guessed correctly in {userInputCollector.Length} turns!");
+            Console.WriteLine("Play Again?");
+            if (GetInput("alphabetic").ToUpper() == "Y") HandlePlay(words);
         }
 
         // ================= UI ====================
+        /// <summary>
+        /// Show main menu to the screen
+        /// </summary>
         public static void DisplayInitialScreen()
         {
             Console.Clear();
@@ -197,6 +235,9 @@ namespace ConsoleWordGuessGame
             Console.WriteLine("2. Admin");
             Console.WriteLine("3. Exit");
         }
+        /// <summary>
+        /// Show admin menu to the screen
+        /// </summary>
         public static void DisplayAdminScreen()
         {
             Console.Clear();
@@ -205,14 +246,19 @@ namespace ConsoleWordGuessGame
             Console.WriteLine("3. Delete Word");
             Console.WriteLine("4. Main Menu");
         }
+        /// <summary>
+        /// Show add word menu to the screen
+        /// </summary>
         public static void DisplayAddWordScreen(string path)
         {
-            Console.Clear();
             Console.WriteLine("Add New Word (Press Enter to save, Ctrl-X to get back to Main Menu):");
             ManageFileContent(GetInput("alphabetic").ToUpper(), "addWord", path);
             Console.WriteLine("Word was added");
             Console.ReadLine();
         }
+        /// <summary>
+        /// Show delete word menu to the screen
+        /// </summary>
         public static void DisplayDeleteWordScreen(string[] words, string path)
         {
             Console.Clear();
@@ -226,6 +272,10 @@ namespace ConsoleWordGuessGame
             Console.ReadLine();
 
         }
+        /// <summary>
+        /// Show all words in the game storage
+        /// </summary>
+        /// <param name="words">Words to show</param>
         public static void DisplayShowAllWordsScreen(string[] words)
         {
             Console.Clear();
@@ -236,6 +286,12 @@ namespace ConsoleWordGuessGame
             }
             Console.ReadLine();
         }
+        /// <summary>
+        /// Show main game screen
+        /// </summary>
+        /// <param name="wordToShow">The word the user guesses</param>
+        /// <param name="alreadyUsedSymbols">The characters already used by the user</param>
+        /// <returns></returns>
         public static string DisplayGamePlayScreen(string wordToShow, string alreadyUsedSymbols)
         {
             Console.Clear();
@@ -245,6 +301,11 @@ namespace ConsoleWordGuessGame
             Console.WriteLine(alreadyUsedSymbols);
             return GetInput("alphabetic");
         }
+        /// <summary>
+        /// Acquire user input depending
+        /// </summary>
+        /// <param name="expectedInputType">Expected input type (numeric, alphabetic)</param>
+        /// <returns>User input</returns>
         public static string GetInput(string expectedInputType)
         {
             // storage for input result 
@@ -276,7 +337,10 @@ namespace ConsoleWordGuessGame
                     char value = default(char);
                     if (char.TryParse(pressed.KeyChar.ToString(), out value))
                     {
-                        userInput += pressed.KeyChar;
+                        if(pressed.Key != ConsoleKey.Enter)
+                        {
+                            userInput += pressed.KeyChar;
+                        }
                         Console.Write(pressed.KeyChar);
                     }
                     if ((pressed.Modifiers & ConsoleModifiers.Control) != 0 && pressed.Key == ConsoleKey.X)
@@ -298,6 +362,5 @@ namespace ConsoleWordGuessGame
             } while (pressed.Key != ConsoleKey.Enter);
             return userInput;
         }
-
     }
 }
