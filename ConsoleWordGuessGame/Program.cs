@@ -108,7 +108,7 @@ namespace ConsoleWordGuessGame
                 File.Delete(path);
                 for (int i = 0; i < words.Length; i++)
                 {
-                    if (i != lineNumber) CreateAppendTo(path, words[i]);
+                    if (i + 1 != lineNumber) CreateAppendTo(path, words[i]);
                 }
                 result = 0;
             }
@@ -210,13 +210,16 @@ namespace ConsoleWordGuessGame
             string userInput = string.Empty;
             string userInputCollector = string.Empty;
 
-            while(WithUnderscores(word, userInputCollector.ToUpper()))
+            while (WithUnderscores(word, userInputCollector.ToUpper()))
             {
                 maskedWord = MaskWithFilter(word, userInputCollector.ToUpper());
-                userInput = DisplayGamePlayScreen(maskedWord, userInputCollector);
-                if (userInput== "ctrlx") return;
-                userInputCollector += userInput; 
-            }
+                DisplayGamePlayScreen(maskedWord, userInputCollector);
+                userInput = GetInput("alphabetic");
+                if (userInput == "ctrlx") return;
+                userInputCollector += userInput;
+            };
+            maskedWord = MaskWithFilter(word, userInputCollector.ToUpper());
+            DisplayGamePlayScreen(maskedWord, userInputCollector);
             Console.WriteLine($"Guessed correctly in {userInputCollector.Length} turns!");
             Console.WriteLine("Play Again?");
             Console.Write("Y/N: ");
@@ -242,6 +245,7 @@ namespace ConsoleWordGuessGame
         public static void DisplayAdminScreen()
         {
             Console.Clear();
+            Console.WriteLine("Admin menu:");
             Console.WriteLine("1. Show All Words");
             Console.WriteLine("2. Add New Word");
             Console.WriteLine("3. Delete Word");
@@ -271,7 +275,6 @@ namespace ConsoleWordGuessGame
             ManageFileContent(GetInput("alphabetic"), "deleteWord", path);
             Console.WriteLine("Word was deleted");
             Console.ReadLine();
-
         }
         /// <summary>
         /// Show all words in the game storage
@@ -293,14 +296,13 @@ namespace ConsoleWordGuessGame
         /// <param name="wordToShow">The word the user guesses</param>
         /// <param name="alreadyUsedSymbols">The characters already used by the user</param>
         /// <returns></returns>
-        public static string DisplayGamePlayScreen(string wordToShow, string alreadyUsedSymbols)
+        public static void DisplayGamePlayScreen(string wordToShow, string alreadyUsedSymbols)
         {
             Console.Clear();
             Console.WriteLine("Choose a letter");
             Console.WriteLine();
             Console.WriteLine(wordToShow);
             Console.WriteLine(alreadyUsedSymbols);
-            return GetInput("alphabetic");
         }
         /// <summary>
         /// Acquire user input depending
