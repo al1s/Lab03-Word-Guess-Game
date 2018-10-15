@@ -219,6 +219,7 @@ namespace ConsoleWordGuessGame
             }
             Console.WriteLine($"Guessed correctly in {userInputCollector.Length} turns!");
             Console.WriteLine("Play Again?");
+            Console.Write("Y/N: ");
             if (GetInput("alphabetic").ToUpper() == "Y") HandlePlay(words);
         }
 

@@ -41,29 +41,28 @@ namespace ConsoleWordGuessGameTests
             if (File.Exists(path)) File.Delete(path);
         }
         [Theory]
-        [InlineData("WARNING", "ASWD", true, "W A _ _ _ _ _")]
-        [InlineData("ERROR", "ASWDR", true, "_ R R _ R")]
-        [InlineData("WARNING", "", true, "_ _ _ _ _ _ _")]
-        [InlineData("ERROR", "", true, "_ _ _ _ _")]
-        [InlineData("WARNING", "ARGINSWD", false, "W A R N I N G")]
-        [InlineData("ERROR", "EOASWDR", false, "E R R O R")]
-        public void ReturnMaskedWordWithMatchedLetters(string word, string collectedUserInput, bool withUnderscores, string expectedValue)
+        [InlineData("WARNING", "ASWD",  "W A _ _ _ _ _")]
+        [InlineData("ERROR", "ASWDR",  "_ R R _ R")]
+        [InlineData("WARNING", "",  "_ _ _ _ _ _ _")]
+        [InlineData("ERROR", "",  "_ _ _ _ _")]
+        [InlineData("WARNING", "ARGINSWD", "W A R N I N G")]
+        [InlineData("ERROR", "EOASWDR",  "E R R O R")]
+        public void ReturnMaskedWordWithMatchedLetters(string word, string collectedUserInput, string expectedValue)
         {
             string returnedValue = string.Empty;
-            Program.MaskWithFilter(word, collectedUserInput, out returnedValue);
+            returnedValue = Program.MaskWithFilter(word, collectedUserInput);
             Assert.Equal(expectedValue, returnedValue);
         }
         [Theory]
-        [InlineData("WARNING", "ASWD", true, "W A _ _ _ _ _")]
-        [InlineData("ERROR", "ASWDR", true, "_ R R _ R")]
-        [InlineData("WARNING", "", true, "_ _ _ _ _ _ _")]
-        [InlineData("ERROR", "", true, "_ _ _ _ _")]
-        [InlineData("WARNING", "ARGINSWD", false, "W A R N I N G")]
-        [InlineData("ERROR", "EOASWDR", false, "E R R O R")]
-        public void ReturnCorrectBoolIfWithUnderscores(string word, string collectedUserInput, bool withUnderscores, string expectedValue)
+        [InlineData("WARNING", "ASWD", true)]
+        [InlineData("ERROR", "ASWDR", true)]
+        [InlineData("WARNING", "", true)]
+        [InlineData("ERROR", "", true)]
+        [InlineData("WARNING", "ARGINSWD", false)]
+        [InlineData("ERROR", "EOASWDR", false)]
+        public void ReturnCorrectBoolIfWithUnderscores(string word, string collectedUserInput, bool withUnderscores)
         {
-            string returnedValue = string.Empty;
-            Assert.Equal(withUnderscores, Program.MaskWithFilter(word, collectedUserInput, out returnedValue));
+            Assert.Equal(withUnderscores, Program.WithUnderscores(word, collectedUserInput));
         }
         //[Fact]
         //public void ReturnRandomWord()
