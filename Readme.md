@@ -29,4 +29,11 @@ The program (should) contain the following
 
 ## Screenshots
 
-![image](https://raw.githubusercontent.com/al1s/Lab03-Word-Guess-Game/master/screenshot.jpg)
+![image](https://raw.githubusercontent.com/al1s/Lab03-Word-Guess-Game/master/screenshot1.PNG)
+![image](https://raw.githubusercontent.com/al1s/Lab03-Word-Guess-Game/master/screenshot2.PNG)
+![image](https://raw.githubusercontent.com/al1s/Lab03-Word-Guess-Game/master/screenshot3.PNG)
+![image](https://raw.githubusercontent.com/al1s/Lab03-Word-Guess-Game/master/screenshot4.PNG)
+![image](https://raw.githubusercontent.com/al1s/Lab03-Word-Guess-Game/master/screenshot5.PNG)
+![image](https://raw.githubusercontent.com/al1s/Lab03-Word-Guess-Game/master/screenshot6.PNG)
+![image](https://raw.githubusercontent.com/al1s/Lab03-Word-Guess-Game/master/screenshot7.PNG)
+![image](https://raw.githubusercontent.com/al1s/Lab03-Word-Guess-Game/master/screenshot8.PNG)
