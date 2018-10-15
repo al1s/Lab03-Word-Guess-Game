@@ -127,7 +127,6 @@ namespace ConsoleWordGuessGame
         /// <param name="path">Path to file</param>
         public static void ManageFileContent(string dataToHandle, string action, string path)
         {
-            if (dataToHandle== "ctrlx") return;
             switch (action)
             {
                 case "addWord":
@@ -257,7 +256,9 @@ namespace ConsoleWordGuessGame
         public static void DisplayAddWordScreen(string path)
         {
             Console.WriteLine("Add New Word (Press Enter to save, Ctrl-X to get back to Main Menu):");
-            ManageFileContent(GetInput("alphabetic").ToUpper(), "addWord", path);
+            string userInput = GetInput("alphabetic");
+            if (userInput == "ctrlx" || userInput == "enter") return;
+            ManageFileContent(userInput.ToUpper(), "addWord", path);
             Console.WriteLine("Word was added");
             Console.ReadLine();
         }
@@ -272,7 +273,9 @@ namespace ConsoleWordGuessGame
             {
                 Console.WriteLine($"{i + 1}. {words[i]}");
             }
-            ManageFileContent(GetInput("alphabetic"), "deleteWord", path);
+            string userInput = GetInput("alphabetic");
+            if (userInput == "ctrlx" || userInput == "enter") return;
+            ManageFileContent(userInput, "deleteWord", path);
             Console.WriteLine("Word was deleted");
             Console.ReadLine();
         }
@@ -349,6 +352,11 @@ namespace ConsoleWordGuessGame
                     if ((pressed.Modifiers & ConsoleModifiers.Control) != 0 && pressed.Key == ConsoleKey.X)
                     {
                         userInput = "ctrlx";
+                        break;
+                    }
+                    else if (pressed.Key == ConsoleKey.Enter && userInput.Length == 0)
+                    {
+                        userInput = "enter";
                         break;
                     }
                 }
