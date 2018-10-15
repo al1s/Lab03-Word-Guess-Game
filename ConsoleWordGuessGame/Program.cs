@@ -42,7 +42,7 @@ namespace ConsoleWordGuessGame
                 }
                 else
                 {
-                    Console.Write("There is no words to choose from. ");
+                    Console.Write("It's a word guess game, but there is no words to choose from. ");
                     DisplayAddWordScreen(path);
                 }
             }
@@ -133,7 +133,6 @@ namespace ConsoleWordGuessGame
                     CreateAppendTo(path, dataToHandle);
                     break;
                 case "deleteWord":
-                    // empty input destroys it
                     DeleteFrom(path, int.Parse(dataToHandle));
                     break;
             }
@@ -259,7 +258,7 @@ namespace ConsoleWordGuessGame
             string userInput = GetInput("alphabetic");
             if (userInput == "ctrlx" || userInput == "enter") return;
             ManageFileContent(userInput.ToUpper(), "addWord", path);
-            Console.WriteLine("Word was added");
+            Console.WriteLine("Word was added. Press Enter to return to menu.");
             Console.ReadLine();
         }
         /// <summary>
@@ -268,7 +267,7 @@ namespace ConsoleWordGuessGame
         public static void DisplayDeleteWordScreen(string[] words, string path)
         {
             Console.Clear();
-            Console.WriteLine("Choose # of Word to delete (Press Enter to save, Ctrl-X to get back to Main Menu):");
+            Console.WriteLine("Choose the word to delete (Press Enter to save, Ctrl-X to get back to Main Menu):");
             for (int i = 0; i < words.Length; i++)
             {
                 Console.WriteLine($"{i + 1}. {words[i]}");
@@ -276,7 +275,7 @@ namespace ConsoleWordGuessGame
             string userInput = GetInput("alphabetic");
             if (userInput == "ctrlx" || userInput == "enter") return;
             ManageFileContent(userInput, "deleteWord", path);
-            Console.WriteLine("Word was deleted");
+            Console.WriteLine("Word was deleted. Press Enter to return to menu.");
             Console.ReadLine();
         }
         /// <summary>
@@ -291,6 +290,7 @@ namespace ConsoleWordGuessGame
             {
                 Console.WriteLine(word);
             }
+            Console.WriteLine("Press Enter to return to menu.");
             Console.ReadLine();
         }
         /// <summary>
